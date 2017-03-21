@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace Validation.Lite
@@ -65,6 +65,22 @@ namespace Validation.Lite
             return this;
         }
 
+        public ValidateFor<T> Length(int exactLength)
+        {
+            return Length(exactLength, exactLength);
+        }
+
+        public ValidateFor<T> Length(int minLength, int maxLength)
+        {
+            if (CurrentValidationRule.ValueType != typeof(string))
+            {
+                throw new Exception("Length method only support string type.");
+            }
+
+            CurrentValidationRule.AddValidator(new LengthValidator(minLength, maxLength));
+            return this;
+        }
+
         public ValidateFor<T> ShouldGreaterThan(IComparable factor)
         {
             if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValueType))
@@ -73,6 +89,28 @@ namespace Validation.Lite
             }
 
             CurrentValidationRule.AddValidator(new GreaterThanValidator(factor));
+            return this;
+        }
+
+        public ValidateFor<T> ShouldGreaterThanOrEqualTo(IComparable factor)
+        {
+            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValueType))
+            {
+                throw new Exception("ShouldGreaterThanOrEqualTo method only support IComparable type.");
+            }
+
+            CurrentValidationRule.AddValidator(new GreaterThanOrEqualToValidator(factor));
+            return this;
+        }
+
+        public ValidateFor<T> ShouldHaveData()
+        {
+            if (!typeof(ICollection).IsAssignableFrom(CurrentValidationRule.ValueType))
+            {
+                throw new Exception("ShouldHaveData method only support ICollection type.");
+            }
+
+            CurrentValidationRule.AddValidator(new HaveDataValidator());
             return this;
         }
 

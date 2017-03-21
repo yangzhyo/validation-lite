@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Validation.Lite.Test
@@ -82,13 +83,68 @@ namespace Validation.Lite.Test
         public void Validate_Not_Empty_Failed()
         {
             Person john = new Person() { Name = "   " };
+            Person bob = new Person();
             var v = new ValidateFor<Person>()
                 .Field(p => p.Name).ShouldNotEmpty();
             var r = v.Validate(john);
+            
+            Assert.IsFalse(r.IsValid);
+            Assert.IsTrue(r.ErrorMessages.Count == 1);
+            Assert.AreEqual(r.ErrorMessages[0], "Name should not be empty.");
+
+            r = v.Validate(bob);
 
             Assert.IsFalse(r.IsValid);
             Assert.IsTrue(r.ErrorMessages.Count == 1);
             Assert.AreEqual(r.ErrorMessages[0], "Name should not be empty.");
+        }
+
+        [TestMethod]
+        public void Validate_Length_Wrong_Type()
+        {
+            try
+            {
+                Person john = new Person();
+                var v = new ValidateFor<Person>()
+                    .Field(p => p.Age).Length(5);
+                var r = v.Validate(john);
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual(ex.Message, "Length method only support string type.");
+                return;
+            }
+
+            Assert.Fail("Should throw exception: Length method only support string type.");
+        }
+
+        [TestMethod]
+        public void Validate_Length_Success()
+        {
+            Person john = new Person() { Name = "John" };
+            var v = new ValidateFor<Person>()
+                .Field(p => p.Name).Length(4).Length(0, 5);
+            var r = v.Validate(john);
+
+            Assert.IsTrue(r.IsValid);
+            Assert.IsTrue(r.ErrorMessages.Count == 0);
+        }
+
+        [TestMethod]
+        public void Validate_Length_Failed()
+        {
+            Person john = new Person() { Name = "John" };
+            Person bob = new Person();
+            var v = new ValidateFor<Person>()
+                .Field(p => p.Name).Length(5).Length(3).Length(0, 3).Length(5, 6);
+            var r = v.Validate(john);
+
+            Assert.IsFalse(r.IsValid);
+            Assert.IsTrue(r.ErrorMessages.Count == 4);
+            Assert.AreEqual(r.ErrorMessages[0], "Length of Name should be 5.");
+            Assert.AreEqual(r.ErrorMessages[1], "Length of Name should be 3.");
+            Assert.AreEqual(r.ErrorMessages[2], "Length of Name should between 0 and 3.");
+            Assert.AreEqual(r.ErrorMessages[3], "Length of Name should between 5 and 6.");
         }
 
         [TestMethod]
@@ -136,6 +192,99 @@ namespace Validation.Lite.Test
             Assert.IsTrue(r.ErrorMessages.Count == 2);
             Assert.AreEqual(r.ErrorMessages[0], "Age should be greater than 0.");
             Assert.AreEqual(r.ErrorMessages[1], "Height should be greater than 0.");
+        }
+
+        [TestMethod]
+        public void Validate_Greater_Than_Or_Equal_To_Wrong_Type()
+        {
+            try
+            {
+                Person john = new Person();
+                var v = new ValidateFor<Person>()
+                    .Field(p => p.Company).ShouldGreaterThanOrEqualTo(0);
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual(ex.Message, "ShouldGreaterThanOrEqualTo method only support IComparable type.");
+                return;
+            }
+
+            Assert.Fail("Should throw exception: ShouldGreaterThanOrEqualTo method only support IComparable type.");
+        }
+
+        [TestMethod]
+        public void Validate_Greater_Than_Or_Equal_To_Success()
+        {
+            Person john = new Person() { Age = 30, Height = 1.8m };
+            var v = new ValidateFor<Person>()
+                .Field(p => p.Age).ShouldGreaterThanOrEqualTo(29)
+                .Field(p => p.Height).ShouldGreaterThanOrEqualTo(1.8m);
+            var r = v.Validate(john);
+
+            Assert.IsTrue(r.IsValid);
+            Assert.IsTrue(r.ErrorMessages.Count == 0);
+        }
+
+        [TestMethod]
+        public void Validate_Greater_Than_Or_Equal_To_Failed()
+        {
+            Person john = new Person() { Age = 0, Height = -1m };
+            var v = new ValidateFor<Person>()
+                .Field(p => p.Age).ShouldGreaterThanOrEqualTo(1)
+                .Field(p => p.Height).ShouldGreaterThanOrEqualTo(0m);
+            var r = v.Validate(john);
+
+            Assert.IsFalse(r.IsValid);
+            Assert.IsTrue(r.ErrorMessages.Count == 2);
+            Assert.AreEqual(r.ErrorMessages[0], "Age should be greater than or equal to 1.");
+            Assert.AreEqual(r.ErrorMessages[1], "Height should be greater than or equal to 0.");
+        }
+
+        [TestMethod]
+        public void Validate_Have_Data_Wrong_Type()
+        {
+            try
+            {
+                Person john = new Person();
+                var v = new ValidateFor<Person>()
+                    .Field(p => p.Company).ShouldHaveData();
+                var r = v.Validate(john);
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual(ex.Message, "ShouldHaveData method only support ICollection type.");
+                return;
+            }
+
+            Assert.Fail("Should throw exception: ShouldHaveData method only support ICollection type.");
+        }
+
+        [TestMethod]
+        public void Validate_Have_Data_Success()
+        {
+            Person john = new Person()
+            {
+                Friends = new List<Person>() {new Person()}
+            };
+            var v = new ValidateFor<Person>()
+                .Field(p => p.Friends).ShouldHaveData();
+            var r = v.Validate(john);
+
+            Assert.IsTrue(r.IsValid);
+            Assert.IsTrue(r.ErrorMessages.Count == 0);
+        }
+
+        [TestMethod]
+        public void Validate_Have_Data_Failed()
+        {
+            Person john = new Person();
+            var v = new ValidateFor<Person>()
+                .Field(p => p.Friends).ShouldHaveData();
+            var r = v.Validate(john);
+
+            Assert.IsFalse(r.IsValid);
+            Assert.IsTrue(r.ErrorMessages.Count == 1);
+            Assert.AreEqual(r.ErrorMessages[0], "Friends should have data.");
         }
 
         [TestMethod]

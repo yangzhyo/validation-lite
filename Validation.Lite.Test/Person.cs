@@ -12,5 +12,6 @@ namespace Validation.Lite.Test
         public int Age { get; set; }
         public decimal Height { get; set; }
         public Company Company { get; set; }
+        public List<Person> Friends { get; set; }
     }
 }

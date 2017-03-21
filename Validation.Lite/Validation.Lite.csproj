@@ -41,10 +41,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Rules\EntityValidationRule.cs" />
+    <Compile Include="Validators\GreaterThanOrEqualToValidator.cs" />
+    <Compile Include="Validators\HaveDataValidator.cs" />
     <Compile Include="Validators\IValidator.cs" />
     <Compile Include="Rules\ValidationRule.cs" />
     <Compile Include="Validators\CustomValidator.cs" />
     <Compile Include="Validators\GreaterThanValidator.cs" />
+    <Compile Include="Validators\LengthValidator.cs" />
     <Compile Include="Validators\NotEmptyValidator.cs" />
     <Compile Include="Validators\NotNullValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
