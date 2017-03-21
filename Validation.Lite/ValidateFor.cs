@@ -36,7 +36,7 @@ namespace Validation.Lite
             if(fieldExpression.Body.NodeType == ExpressionType.MemberAccess)
             {
                 MemberExpression memberExpression = (MemberExpression)fieldExpression.Body;
-                string ruleName = memberExpression.Member.Name;
+                string ruleName = $"{typeof(T).Name}.{memberExpression.Member.Name}";
                 Type valueType = typeof(TProperty);
 
                 _validationRules.Add(new PropertyValidationRule(ruleName, valueType, weakTypeGetFieldFunc));
@@ -103,6 +103,39 @@ namespace Validation.Lite
             return this;
         }
 
+        public ValidateFor<T> ShouldLessThan(IComparable factor)
+        {
+            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValueType))
+            {
+                throw new Exception("ShouldLessThan method only support IComparable type.");
+            }
+
+            CurrentValidationRule.AddValidator(new LessThanValidator(factor));
+            return this;
+        }
+
+        public ValidateFor<T> ShouldLessThanOrEqualTo(IComparable factor)
+        {
+            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValueType))
+            {
+                throw new Exception("ShouldLessThanOrEqualTo method only support IComparable type.");
+            }
+
+            CurrentValidationRule.AddValidator(new LessThanOrEqualToValidator(factor));
+            return this;
+        }
+
+        public ValidateFor<T> ShouldEqualTo(IComparable factor)
+        {
+            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValueType))
+            {
+                throw new Exception("ShouldEqualTo method only support IComparable type.");
+            }
+
+            CurrentValidationRule.AddValidator(new EqualToValidator(factor));
+            return this;
+        }
+
         public ValidateFor<T> ShouldHaveData()
         {
             if (!typeof(ICollection).IsAssignableFrom(CurrentValidationRule.ValueType))
@@ -111,6 +144,13 @@ namespace Validation.Lite
             }
 
             CurrentValidationRule.AddValidator(new HaveDataValidator());
+            return this;
+        }
+
+        public ValidateFor<T> ValidateWith<TProperty>(ValidateFor<TProperty> validateFor)
+        {
+            CurrentValidationRule.AddValidator(new NestedValidator<TProperty>(validateFor));
+
             return this;
         }
 
@@ -141,7 +181,7 @@ namespace Validation.Lite
                         if(!validator.IsValid)
                         {
                             result.IsValid = false;
-                            result.ErrorMessages.Add(validator.Message);
+                            result.ErrorMessages.AddRange(validator.Messages);
                         }
                     }
                 }

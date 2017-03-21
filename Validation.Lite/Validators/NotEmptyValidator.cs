@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Validation.Lite
 {
@@ -10,20 +6,19 @@ namespace Validation.Lite
     {
         public bool IsValid { get; set; }
 
-        public string Message { get; set; }
+        public List<string> Messages { get; set; }
 
         public void Validate(ValidationContext context)
         {
+            IsValid = true;
+            Messages = new List<string>();
+
             string value = context.Value as string;
             if (string.IsNullOrWhiteSpace(value))
             {
                 IsValid = false;
-                Message = $"{context.Name} should not be empty.";
-                return;
+                Messages.Add($"{context.Name} should not be empty.");
             }
-
-            IsValid = true;
-            Message = "Ok";
         }
     }
 }

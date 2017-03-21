@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace Validation.Lite.Test
 {
-    public class Person
+    public class Book
     {
         public string Name { get; set; }
-        public int Age { get; set; }
-        public decimal Height { get; set; }
-        public Company Company { get; set; }
-        public List<Book> FavoriteBooks { get; set; }
+        public int PageCount { get; set; }
     }
 }

@@ -3,17 +3,17 @@ using System.Collections.Generic;
 
 namespace Validation.Lite
 {
-    public class CustomValidator<T> : IValidator
+    public class LessThanValidator : IValidator
     {
-        public Func<T, ValidationResult> CustomValidateFunc { get; set; }
+        private IComparable _factor;
 
         public bool IsValid { get; set; }
 
         public List<string> Messages { get; set; }
 
-        public CustomValidator(Func<T, ValidationResult> customValidateFunc)
+        public LessThanValidator(IComparable factor)
         {
-            CustomValidateFunc = customValidateFunc;
+            _factor = factor;
         }
 
         public void Validate(ValidationContext context)
@@ -21,12 +21,12 @@ namespace Validation.Lite
             IsValid = true;
             Messages = new List<string>();
 
-            ValidationResult result = CustomValidateFunc((T)context.Value);
+            IComparable value = context.Value as IComparable;
 
-            if (!result.IsValid)
+            if (value == null || value.CompareTo(_factor) >= 0)
             {
                 IsValid = false;
-                Messages.AddRange(result.ErrorMessages);
+                Messages.Add($"{context.Name} should be less than {_factor}.");
             }
         }
     }

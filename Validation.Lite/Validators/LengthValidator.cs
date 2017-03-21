@@ -1,4 +1,6 @@
-﻿namespace Validation.Lite
+﻿using System.Collections.Generic;
+
+namespace Validation.Lite
 {
     public class LengthValidator : IValidator
     {
@@ -6,7 +8,7 @@
         private int _maxLength;
 
         public bool IsValid { get; set; }
-        public string Message { get; set; }
+        public List<string> Messages { get; set; }
 
         public LengthValidator(int minLength, int maxLength)
         {
@@ -16,6 +18,9 @@
 
         public void Validate(ValidationContext context)
         {
+            IsValid = true;
+            Messages = new List<string>();
+
             string value = context.Value as string;
             value = value ?? "";
             int length = value.Length;
@@ -25,18 +30,13 @@
                 IsValid = false;
                 if (_minLength == _maxLength)
                 {
-                    Message = $"Length of {context.Name} should be {_maxLength}.";
+                    Messages.Add($"Length of {context.Name} should be {_maxLength}.");
                 }
                 else
                 {
-                    Message = $"Length of {context.Name} should between {_minLength} and {_maxLength}.";
+                    Messages.Add($"Length of {context.Name} should between {_minLength} and {_maxLength}.");
                 }
-                
-                return;
             }
-
-            IsValid = true;
-            Message = "Ok";
         }
     }
 }

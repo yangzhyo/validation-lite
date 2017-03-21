@@ -41,7 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Rules\EntityValidationRule.cs" />
+    <Compile Include="Validators\LessThanOrEqualToValidator.cs" />
     <Compile Include="Validators\GreaterThanOrEqualToValidator.cs" />
+    <Compile Include="Validators\EqualToValidator.cs" />
+    <Compile Include="Validators\LessThanValidator.cs" />
     <Compile Include="Validators\HaveDataValidator.cs" />
     <Compile Include="Validators\IValidator.cs" />
     <Compile Include="Rules\ValidationRule.cs" />
@@ -55,6 +58,7 @@
     <Compile Include="ValidationResult.cs" />
     <Compile Include="ValidateFor.cs" />
     <Compile Include="Rules\PropertyValidationRule.cs" />
+    <Compile Include="Validators\NestedValidator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

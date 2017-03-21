@@ -1,22 +1,23 @@
-﻿namespace Validation.Lite
+﻿using System.Collections.Generic;
+
+namespace Validation.Lite
 {
     public class NotNullValidator : IValidator
     {
         public bool IsValid { get; set; }
 
-        public string Message { get; set; }
+        public List<string> Messages { get; set; }
 
         public void Validate(ValidationContext context)
         {
+            IsValid = true;
+            Messages = new List<string>();
+
             if(context.Value == null)
             {
                 IsValid = false;
-                Message = $"{context.Name} should not be null.";
-                return;
+                Messages.Add($"{context.Name} should not be null.");
             }
-
-            IsValid = true;
-            Message = "Ok";
         }
     }
 }
