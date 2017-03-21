@@ -78,6 +78,11 @@ namespace Validation.Lite
 
         public ValidateFor<T> ShouldPassCustomCheck(Func<T, ValidationResult> customCheckFunc)
         {
+            if (!(CurrentValidationRule is EntityValidationRule))
+            {
+                throw new Exception("ShouldPassCustomCheck method only support entity validation rule.");
+            }
+
             CurrentValidationRule.AddValidator(new CustomValidator<T>(customCheckFunc));
             return this;
         }

@@ -40,9 +40,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityValidationRule.cs" />
-    <Compile Include="IValidator.cs" />
-    <Compile Include="ValidationRule.cs" />
+    <Compile Include="Rules\EntityValidationRule.cs" />
+    <Compile Include="Validators\IValidator.cs" />
+    <Compile Include="Rules\ValidationRule.cs" />
     <Compile Include="Validators\CustomValidator.cs" />
     <Compile Include="Validators\GreaterThanValidator.cs" />
     <Compile Include="Validators\NotEmptyValidator.cs" />
@@ -51,7 +51,7 @@
     <Compile Include="ValidationContext.cs" />
     <Compile Include="ValidationResult.cs" />
     <Compile Include="ValidateFor.cs" />
-    <Compile Include="PropertyValidationRule.cs" />
+    <Compile Include="Rules\PropertyValidationRule.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

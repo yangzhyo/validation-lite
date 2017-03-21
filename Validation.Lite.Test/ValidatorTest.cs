@@ -163,6 +163,24 @@ namespace Validation.Lite.Test
             Assert.AreEqual(r.ErrorMessages[0], "Custom Check Failed.");
         }
 
+        [TestMethod]
+        public void Validate_Custom_Check_Wrong_Type()
+        {
+            try
+            {
+                Person john = new Person();
+                var v = new ValidateFor<Person>()
+                    .Field(p => p.Age).ShouldPassCustomCheck(CustomCheckFail);
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual(ex.Message, "ShouldPassCustomCheck method only support entity validation rule.");
+                return;
+            }
+            
+            Assert.Fail("Should throw exception: ShouldPassCustomCheck method only support entity validation rule.");
+        }
+
         ValidationResult CustomCheckOk(Person p)
         {
             return new ValidationResult { IsValid = true };
