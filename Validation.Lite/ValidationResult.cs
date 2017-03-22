@@ -37,8 +37,18 @@ namespace Validation.Lite
             }
             else
             {
-                string errorMessage = "Validate failed:" + Environment.NewLine;
-                ErrorMessages.ForEach(e => { errorMessage += e + Environment.NewLine; });
+                string errorMessage = string.Empty;
+                for (int i = 0; i < ErrorMessages.Count; i++)
+                {
+                    if (i == ErrorMessages.Count - 1)
+                    {
+                        errorMessage += ErrorMessages[i];
+                    }
+                    else
+                    {
+                        errorMessage += ErrorMessages[i] + Environment.NewLine;
+                    }
+                }
                 return errorMessage;
             }
         }

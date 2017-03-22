@@ -580,5 +580,44 @@ namespace Validation.Lite.Test
                 ErrorMessages = new List<string> { "Custom Check Failed." }
             };
         }
+
+        [TestMethod]
+        public void Validate_List_Entity_Success()
+        {
+            List<Person> persons = new List<Person>()
+            {
+                new Person() {Name = "John"}
+            };
+            var v = new ValidateFor<List<Person>>()
+                .Field(s => s.Count).ShouldEqualTo(1)
+                .Entity().ShouldHaveData().ValidateWith(
+                    new ValidateFor<Person>()
+                        .Field(p => p.Name).ShouldNotEmpty());
+            var r = v.Validate(persons);
+            Assert.IsTrue(r.IsValid);
+        }
+
+        [TestMethod]
+        public void Validate_List_Entity_Failed()
+        {
+            List<Person> persons = new List<Person>();
+            var v = new ValidateFor<List<Person>>()
+                .Field(s => s.Count).ShouldEqualTo(1)
+                .Entity().ShouldHaveData().ValidateWith(
+                    new ValidateFor<Person>()
+                        .Field(p => p.Name).ShouldNotEmpty());
+
+            var r = v.Validate(persons);
+            Assert.IsFalse(r.IsValid);
+            Assert.AreEqual(r.ErrorMessages.Count, 2);
+            Assert.AreEqual(r.ErrorMessages[0], "List`1.Count should be equal to 1.");
+            Assert.AreEqual(r.ErrorMessages[1], "List`1 should have data.");
+
+            persons.Add(new Person());
+            r = v.Validate(persons);
+            Assert.IsFalse(r.IsValid);
+            Assert.AreEqual(r.ErrorMessages.Count, 1);
+            Assert.AreEqual(r.ErrorMessages[0], "Collection@1:Person.Name should not be empty.");
+        }
     }
 }
