@@ -4,15 +4,15 @@ namespace Validation.Lite
 {
     public class PropertyValidationRule : ValidationRule
     {
-        private Func<object, object> GetValueFunc { get; set; }
+        private Func<object, object> GetValueFunc { get; }
 
-        public PropertyValidationRule(string ruleName, Type valueType, Func<object, object> getValueFunc)
-            : base(ruleName, valueType)
+        public PropertyValidationRule(string validateObjectName, Type validateObjectType, Func<object, object> getValueFunc)
+            : base(validateObjectName, validateObjectType)
         {
             GetValueFunc = getValueFunc;
         }
 
-        public override object GetValidateValue(object obj)
+        public override object GetValidateObjectValue(object obj)
         {
             return GetValueFunc(obj);
         }

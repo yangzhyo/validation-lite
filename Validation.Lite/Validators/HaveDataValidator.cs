@@ -1,24 +1,21 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 
 namespace Validation.Lite
 {
     public class HaveDataValidator : IValidator
     {
-        public bool IsValid { get; set; }
-        public List<string> Messages { get; set; }
-
-        public void Validate(ValidationContext context)
+        public ValidationResult Validate(ValidationContext context)
         {
-            IsValid = true;
-            Messages = new List<string>();
+            ValidationResult result = new ValidationResult();
 
-            var collection = context.Value as ICollection;
+            var collection = context.ValidateObjectValue as ICollection;
             if (collection == null || collection.Count == 0)
             {
-                IsValid = false;
-                Messages.Add($"{context.Name} should have data.");
+                result.IsValid = false;
+                result.ErrorMessages.Add($"{context.ValidateObjectName} should have data.");
             }
+
+            return result;
         }
     }
 }

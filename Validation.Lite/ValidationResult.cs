@@ -12,5 +12,14 @@ namespace Validation.Lite
             IsValid = true;
             ErrorMessages = new List<string>();
         }
+
+        public void MergeValidationResult(ValidationResult result)
+        {
+            if (!result.IsValid)
+            {
+                IsValid = false;
+                ErrorMessages.AddRange(result.ErrorMessages);
+            }
+        }
     }
 }

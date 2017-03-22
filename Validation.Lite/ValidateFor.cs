@@ -24,7 +24,7 @@ namespace Validation.Lite
 
         public ValidateFor<T> Entity()
         {
-            _validationRules.Add(new EntityValidationRule(typeof(T).ToString(), typeof(T)));
+            _validationRules.Add(new EntityValidationRule(typeof(T).Name, typeof(T)));
             return this;
         }
 
@@ -36,16 +36,14 @@ namespace Validation.Lite
             if(fieldExpression.Body.NodeType == ExpressionType.MemberAccess)
             {
                 MemberExpression memberExpression = (MemberExpression)fieldExpression.Body;
-                string ruleName = $"{typeof(T).Name}.{memberExpression.Member.Name}";
-                Type valueType = typeof(TProperty);
+                string validateObjectName = $"{typeof(T).Name}.{memberExpression.Member.Name}";
+                Type validateObjectType = typeof(TProperty);
 
-                _validationRules.Add(new PropertyValidationRule(ruleName, valueType, weakTypeGetFieldFunc));
+                _validationRules.Add(new PropertyValidationRule(validateObjectName, validateObjectType, weakTypeGetFieldFunc));
                 return this;
             }
-            else
-            {
-                throw new Exception("Field<TProperty> method only support member access.");
-            }
+
+            throw new Exception("Field<TProperty> method only support member access.");
         }
 
         public ValidateFor<T> ShouldNotNull()
@@ -56,7 +54,7 @@ namespace Validation.Lite
 
         public ValidateFor<T> ShouldNotEmpty()
         {
-            if (CurrentValidationRule.ValueType != typeof(string))
+            if (CurrentValidationRule.ValidateObjectType != typeof(string))
             {
                 throw new Exception("ShouldNotEmpty method only support string type.");
             }
@@ -72,7 +70,7 @@ namespace Validation.Lite
 
         public ValidateFor<T> Length(int minLength, int maxLength)
         {
-            if (CurrentValidationRule.ValueType != typeof(string))
+            if (CurrentValidationRule.ValidateObjectType != typeof(string))
             {
                 throw new Exception("Length method only support string type.");
             }
@@ -83,7 +81,7 @@ namespace Validation.Lite
 
         public ValidateFor<T> ShouldGreaterThan(IComparable factor)
         {
-            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValueType))
+            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValidateObjectType))
             {
                 throw new Exception("ShouldGreaterThan method only support IComparable type.");
             }
@@ -94,7 +92,7 @@ namespace Validation.Lite
 
         public ValidateFor<T> ShouldGreaterThanOrEqualTo(IComparable factor)
         {
-            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValueType))
+            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValidateObjectType))
             {
                 throw new Exception("ShouldGreaterThanOrEqualTo method only support IComparable type.");
             }
@@ -105,7 +103,7 @@ namespace Validation.Lite
 
         public ValidateFor<T> ShouldLessThan(IComparable factor)
         {
-            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValueType))
+            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValidateObjectType))
             {
                 throw new Exception("ShouldLessThan method only support IComparable type.");
             }
@@ -116,7 +114,7 @@ namespace Validation.Lite
 
         public ValidateFor<T> ShouldLessThanOrEqualTo(IComparable factor)
         {
-            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValueType))
+            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValidateObjectType))
             {
                 throw new Exception("ShouldLessThanOrEqualTo method only support IComparable type.");
             }
@@ -127,7 +125,7 @@ namespace Validation.Lite
 
         public ValidateFor<T> ShouldEqualTo(IComparable factor)
         {
-            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValueType))
+            if (!typeof(IComparable).IsAssignableFrom(CurrentValidationRule.ValidateObjectType))
             {
                 throw new Exception("ShouldEqualTo method only support IComparable type.");
             }
@@ -138,7 +136,7 @@ namespace Validation.Lite
 
         public ValidateFor<T> ShouldHaveData()
         {
-            if (!typeof(ICollection).IsAssignableFrom(CurrentValidationRule.ValueType))
+            if (!typeof(ICollection).IsAssignableFrom(CurrentValidationRule.ValidateObjectType))
             {
                 throw new Exception("ShouldHaveData method only support ICollection type.");
             }
@@ -167,27 +165,19 @@ namespace Validation.Lite
 
         public ValidationResult Validate(T target)
         {
-            ValidationResult result = new ValidationResult();
+            ValidationResult finalResult = new ValidationResult();
 
             if(_validationRules.Count > 0)
             {
                 foreach(var rule in _validationRules)
                 {
-                    ValidationContext context = new ValidationContext(rule.RuleName, rule.GetValidateValue(target));
-
-                    foreach(var validator in rule.Validators)
-                    {
-                        validator.Validate(context);
-                        if(!validator.IsValid)
-                        {
-                            result.IsValid = false;
-                            result.ErrorMessages.AddRange(validator.Messages);
-                        }
-                    }
+                    ValidationContext context = new ValidationContext(rule.ValidateObjectName, rule.GetValidateObjectValue(target));
+                    ValidationResult result = rule.Validate(context);
+                    finalResult.MergeValidationResult(result);
                 }
             }
 
-            return result;
+            return finalResult;
         }
     }
 }

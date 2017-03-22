@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Validation.Lite
 {
     public abstract class ValidationRule
     {
-        public string RuleName { get; set; }
-        public Type ValueType { get; set; }
+        public string ValidateObjectName { get; set; }
+        public Type ValidateObjectType { get; set; }
         public IList<IValidator> Validators { get; set; }
 
-        public ValidationRule(string ruleName, Type valueType)
+        protected ValidationRule(string validateObjectName, Type validateObjectType)
         {
-            RuleName = ruleName;
-            ValueType = valueType;
+            ValidateObjectName = validateObjectName;
+            ValidateObjectType = validateObjectType;
             Validators = new List<IValidator>();
         }
 
@@ -24,6 +21,18 @@ namespace Validation.Lite
             Validators.Add(validator);
         }
 
-        public abstract object GetValidateValue(object obj);
+        public ValidationResult Validate(ValidationContext context)
+        {
+            ValidationResult finalResult = new ValidationResult();
+            foreach (IValidator validator in Validators)
+            {
+                ValidationResult result = validator.Validate(context);
+                finalResult.MergeValidationResult(result);
+            }
+
+            return finalResult;
+        }
+
+        public abstract object GetValidateObjectValue(object obj);
     }
 }

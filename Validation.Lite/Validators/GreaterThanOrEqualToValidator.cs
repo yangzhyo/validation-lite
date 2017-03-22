@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Validation.Lite
 {
@@ -7,26 +6,24 @@ namespace Validation.Lite
     {
         private IComparable _factor;
 
-        public bool IsValid { get; set; }
-        public List<string> Messages { get; set; }
-
         public GreaterThanOrEqualToValidator(IComparable factor)
         {
             _factor = factor;
         }
 
-        public void Validate(ValidationContext context)
+        public ValidationResult Validate(ValidationContext context)
         {
-            IsValid = true;
-            Messages = new List<string>();
+            ValidationResult result = new ValidationResult();
 
-            IComparable value = context.Value as IComparable;
+            IComparable value = context.ValidateObjectValue as IComparable;
 
             if (value == null || value.CompareTo(_factor) < 0)
             {
-                IsValid = false;
-                Messages.Add($"{context.Name} should be greater than or equal to {_factor}.");
+                result.IsValid = false;
+                result.ErrorMessages.Add($"{context.ValidateObjectName} should be greater than or equal to {_factor}.");
             }
+
+            return result;
         }
     }
 }

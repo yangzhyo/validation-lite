@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Validation.Lite
 {
     public class EntityValidationRule : ValidationRule
     {
-        public EntityValidationRule(string ruleName, Type valueType)
-            : base(ruleName, valueType)
+        public EntityValidationRule(string validateObjectName, Type validateObjectType)
+            : base(validateObjectName, validateObjectType)
         {
         }
 
-        public override object GetValidateValue(object obj)
+        public override object GetValidateObjectValue(object obj)
         {
             return obj;
         }

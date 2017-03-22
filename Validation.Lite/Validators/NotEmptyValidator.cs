@@ -1,24 +1,19 @@
-﻿using System.Collections.Generic;
-
-namespace Validation.Lite
+﻿namespace Validation.Lite
 {
     public class NotEmptyValidator : IValidator
     {
-        public bool IsValid { get; set; }
-
-        public List<string> Messages { get; set; }
-
-        public void Validate(ValidationContext context)
+        public ValidationResult Validate(ValidationContext context)
         {
-            IsValid = true;
-            Messages = new List<string>();
+            ValidationResult result = new ValidationResult();
 
-            string value = context.Value as string;
+            string value = context.ValidateObjectValue as string;
             if (string.IsNullOrWhiteSpace(value))
             {
-                IsValid = false;
-                Messages.Add($"{context.Name} should not be empty.");
+                result.IsValid = false;
+                result.ErrorMessages.Add($"{context.ValidateObjectName} should not be empty.");
             }
+
+            return result;
         }
     }
 }

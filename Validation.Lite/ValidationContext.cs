@@ -1,25 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Validation.Lite
+﻿namespace Validation.Lite
 {
     public class ValidationContext
     {
-        public string Name { get; set; }
-        public object Value { get; set; }
+        public string ValidateObjectName { get; set; }
+        public object ValidateObjectValue { get; set; }
 
-        public ValidationContext()
+        public ValidationContext(string validateObjectName, object validateObjectValue)
         {
-
-        }
-
-        public ValidationContext(string name, object value)
-        {
-            Name = name;
-            Value = value;
+            ValidateObjectName = validateObjectName;
+            ValidateObjectValue = validateObjectValue;
         }
     }
 }

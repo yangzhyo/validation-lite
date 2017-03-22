@@ -10,7 +10,7 @@ namespace Validation.Lite.Test
     {
         public string Name { get; set; }
         public int Age { get; set; }
-        public decimal Height { get; set; }
+        public decimal Height;
         public Company Company { get; set; }
         public List<Book> FavoriteBooks { get; set; }
     }
