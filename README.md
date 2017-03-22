@@ -28,3 +28,16 @@ if (!r.IsValid)
     //Show r.ErrorMessages;
 }
 ```
+
+```C#
+List<Person> persons = new List<Person>()
+{
+    new Person() {Name = "John"}
+};
+var v = new ValidateFor<List<Person>>()
+    .Field(s => s.Count).ShouldEqualTo(1)
+    .Entity().ShouldHaveData().ValidateWith(
+        new ValidateFor<Person>()
+            .Field(p => p.Name).ShouldNotEmpty());
+var r = v.Validate(persons);
+```
