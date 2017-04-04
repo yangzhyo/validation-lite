@@ -1,7 +1,7 @@
 ﻿namespace Validation.Lite
 {
-    public interface IValidator
+    public interface IValidator<T>
     {
-        ValidationResult Validate(ValidationContext context);
+        ValidationResult Validate(T value);
     }
 }

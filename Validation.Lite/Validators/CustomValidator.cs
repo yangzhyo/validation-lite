@@ -2,7 +2,7 @@
 
 namespace Validation.Lite
 {
-    public class CustomValidator<T> : IValidator
+    public class CustomValidator<T> : IValidator<T>
     {
         public Func<T, ValidationResult> CustomValidateFunc { get; set; }
 
@@ -11,9 +11,9 @@ namespace Validation.Lite
             CustomValidateFunc = customValidateFunc;
         }
 
-        public ValidationResult Validate(ValidationContext context)
+        public ValidationResult Validate(T value)
         {
-            return CustomValidateFunc((T) context.ValidateObjectValue);
+            return CustomValidateFunc(value);
         }
     }
 }

@@ -1,15 +1,15 @@
 ﻿namespace Validation.Lite
 {
-    public class NotNullValidator : IValidator
+    public class NotNullValidator<T> : IValidator<T>
     {
-        public ValidationResult Validate(ValidationContext context)
+        public ValidationResult Validate(T value)
         {
             ValidationResult result = new ValidationResult();
 
-            if (context.ValidateObjectValue == null)
+            if (value == null)
             {
                 result.IsValid = false;
-                result.ErrorMessages.Add($"{context.ValidateObjectName} should not be null.");
+                result.ErrorMessages.Add($"{typeof(T)} should not be null.");
             }
 
             return result;

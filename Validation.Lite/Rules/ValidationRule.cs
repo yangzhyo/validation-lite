@@ -1,38 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq.Expressions;
 
 namespace Validation.Lite
 {
-    public abstract class ValidationRule
+    public abstract class ValidationRule<T>
     {
-        public string ValidateObjectName { get; set; }
-        public Type ValidateObjectType { get; set; }
-        public IList<IValidator> Validators { get; set; }
+        private ValidateFor<T> _validateFor = null;
 
-        protected ValidationRule(string validateObjectName, Type validateObjectType)
+        protected ValidationRule(ValidateFor<T> validationFor)
         {
-            ValidateObjectName = validateObjectName;
-            ValidateObjectType = validateObjectType;
-            Validators = new List<IValidator>();
+            _validateFor = validationFor;
         }
 
-        public void AddValidator(IValidator validator)
+        public abstract ValidationResult Validate(T entiy);
+
+        public ValidateFor<T> Build()
         {
-            Validators.Add(validator);
+            return _validateFor;
         }
 
-        public ValidationResult Validate(ValidationContext context)
+        public PropertyValidationRule<T, TProperty> Field<TProperty>(Expression<Func<T, TProperty>> fieldExpression)
         {
-            ValidationResult finalResult = new ValidationResult();
-            foreach (IValidator validator in Validators)
-            {
-                ValidationResult result = validator.Validate(context);
-                finalResult.MergeValidationResult(result);
-            }
-
-            return finalResult;
+            return _validateFor.Field(fieldExpression);
         }
 
-        public abstract object GetValidateObjectValue(object obj);
+        public EntityValidationRule<T> Entity()
+        {
+            return _validateFor.Entity();
+        }
     }
 }

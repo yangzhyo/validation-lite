@@ -1,6 +1,6 @@
 ﻿namespace Validation.Lite
 {
-    public class LengthValidator : IValidator
+    public class LengthValidator<T> : IValidator<T>
     {
         private int _minLength;
         private int _maxLength;
@@ -11,24 +11,28 @@
             _maxLength = maxLength;
         }
 
-        public ValidationResult Validate(ValidationContext context)
+        public ValidationResult Validate(T value)
         {
             ValidationResult result = new ValidationResult();
 
-            string value = context.ValidateObjectValue as string;
-            value = value ?? "";
-            int length = value.Length;
+            string str = value?.ToString();
+            
+            int length = 0;
+            if (str != null)
+            {
+                length = str.Length;
+            }
 
             if (length < _minLength || length > _maxLength)
             {
                 result.IsValid = false;
                 if (_minLength == _maxLength)
                 {
-                    result.ErrorMessages.Add($"Length of {context.ValidateObjectName} should be {_maxLength}.");
+                    result.ErrorMessages.Add($"Length of {typeof(T)} should be {_maxLength}.");
                 }
                 else
                 {
-                    result.ErrorMessages.Add($"Length of {context.ValidateObjectName} should between {_minLength} and {_maxLength}.");
+                    result.ErrorMessages.Add($"Length of {typeof(T)} should between {_minLength} and {_maxLength}.");
                 }
             }
 

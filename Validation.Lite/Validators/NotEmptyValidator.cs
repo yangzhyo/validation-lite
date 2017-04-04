@@ -1,16 +1,16 @@
 ﻿namespace Validation.Lite
 {
-    public class NotEmptyValidator : IValidator
+    public class NotEmptyValidator<T> : IValidator<T>
     {
-        public ValidationResult Validate(ValidationContext context)
+        public ValidationResult Validate(T value)
         {
             ValidationResult result = new ValidationResult();
 
-            string value = context.ValidateObjectValue as string;
-            if (string.IsNullOrWhiteSpace(value))
+            string str = value?.ToString();
+            if (string.IsNullOrWhiteSpace(str))
             {
                 result.IsValid = false;
-                result.ErrorMessages.Add($"{context.ValidateObjectName} should not be empty.");
+                result.ErrorMessages.Add($"{typeof(T)} should not be empty.");
             }
 
             return result;

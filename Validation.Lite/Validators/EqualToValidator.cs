@@ -1,26 +1,40 @@
 ﻿using System;
+using System.Linq.Expressions;
 
 namespace Validation.Lite
 {
-    public class EqualToValidator : IValidator
+    public class EqualToValidator<T> : IValidator<T>
     {
-        private IComparable _factor;
+        private T _factor;
+        private static Func<T, T, bool> CompareFunc
+        {
+            get
+            {
+                ParameterExpression value = Expression.Parameter(typeof(T), "value");
+                ParameterExpression factor = Expression.Parameter(typeof(T), "factor");
+                BinaryExpression compare = Expression.Equal(value, factor);
+                Expression<Func<T, T, bool>> lambda =
+                    Expression.Lambda<Func<T, T, bool>>(
+                        compare,
+                        new ParameterExpression[] { value, factor });
 
-        public EqualToValidator(IComparable factor)
+                return lambda.Compile();
+            }
+        }
+
+        public EqualToValidator(T factor)
         {
             _factor = factor;
         }
 
-        public ValidationResult Validate(ValidationContext context)
+        public ValidationResult Validate(T value)
         {
             ValidationResult result = new ValidationResult();
 
-            IComparable value = context.ValidateObjectValue as IComparable;
-
-            if (value == null || value.CompareTo(_factor) != 0)
+            if (!CompareFunc(value, _factor))
             {
                 result.IsValid = false;
-                result.ErrorMessages.Add($"{context.ValidateObjectName} should be equal to {_factor}.");
+                result.ErrorMessages.Add($"{typeof(T)} should be equal to {_factor}.");
             }
 
             return result;

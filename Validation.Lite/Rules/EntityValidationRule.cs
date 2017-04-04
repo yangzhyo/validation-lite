@@ -1,18 +1,39 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Validation.Lite
 {
-    public class EntityValidationRule : ValidationRule
+    public class EntityValidationRule<T> : ValidationRule<T>
     {
-        public EntityValidationRule(string validateObjectName, Type validateObjectType)
-            : base(validateObjectName, validateObjectType)
+        private ICollection<IValidator<T>> Validators { get; }
+
+        public EntityValidationRule(ValidateFor<T> validationFor)
+            : base(validationFor)
         {
+            Validators = new List<IValidator<T>>();
         }
 
-        public override object GetValidateObjectValue(object obj)
+        private void AddValidator(IValidator<T> validator)
         {
-            return obj;
+            Validators.Add(validator);
         }
-    
+
+        public override ValidationResult Validate(T entiy)
+        {
+            ValidationResult finalResult = new ValidationResult();
+            foreach (IValidator<T> validator in Validators)
+            {
+                ValidationResult result = validator.Validate(entiy);
+                finalResult.MergeValidationResult(result);
+            }
+
+            return finalResult;
+        }
+
+        public EntityValidationRule<T> ShouldPassCustomCheck(Func<T, ValidationResult> customCheckFunc)
+        {
+            AddValidator(new CustomValidator<T>(customCheckFunc));
+            return this;
+        }
     }
 }

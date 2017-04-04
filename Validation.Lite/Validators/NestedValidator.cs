@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Validation.Lite
 {
-    public class NestedValidator<T> : IValidator
+    public class NestedValidator<T> : IValidator<T>
     {
         private ValidateFor<T> _validateFor;
 
@@ -13,18 +13,11 @@ namespace Validation.Lite
             _validateFor = validateFor;
         }
 
-        public ValidationResult Validate(ValidationContext context)
+        public ValidationResult Validate(T value)
         {
-            if (context.ValidateObjectValue == null)
+            if (value is IEnumerable)
             {
-                ValidationResult result = new ValidationResult {IsValid = false};
-                result.ErrorMessages.Add($"{context.ValidateObjectName} should not be null.");
-                return result;
-            }
-
-            if (context.ValidateObjectValue is IEnumerable)
-            {
-                var enumerable = context.ValidateObjectValue as IEnumerable<T>;
+                var enumerable = value as IEnumerable<T>;
                 if (enumerable != null)
                 {
                     var entityCollections = enumerable.GetEnumerator();
@@ -50,7 +43,7 @@ namespace Validation.Lite
             }
             else
             {
-                return _validateFor.Validate((T)context.ValidateObjectValue);
+                return _validateFor.Validate(value);
             }
         }
     }

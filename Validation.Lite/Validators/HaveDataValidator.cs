@@ -2,17 +2,18 @@
 
 namespace Validation.Lite
 {
-    public class HaveDataValidator : IValidator
+    public class HaveDataValidator<T> : IValidator<T>
+        //where T : ICollection
     {
-        public ValidationResult Validate(ValidationContext context)
+        public ValidationResult Validate(T value)
         {
             ValidationResult result = new ValidationResult();
 
-            var collection = context.ValidateObjectValue as ICollection;
+            var collection = value as ICollection;
             if (collection == null || collection.Count == 0)
             {
                 result.IsValid = false;
-                result.ErrorMessages.Add($"{context.ValidateObjectName} should have data.");
+                result.ErrorMessages.Add($"{typeof(T)} should have data.");
             }
 
             return result;
