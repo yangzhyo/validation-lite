@@ -30,6 +30,18 @@ namespace Validation.Lite
             return finalResult;
         }
 
+        public EntityValidationRule<T> ShouldHaveData()
+        {
+            AddValidator(new HaveDataValidator<T>());
+            return this;
+        }
+
+        //public EntityValidationRule<T> ValidateWith<TEntity>(ValidateFor<TEntity> validateFor)
+        //{
+        //    AddValidator(new NestedValidator<TEntity>(validateFor));
+        //    return this;
+        //}
+
         public EntityValidationRule<T> ShouldPassCustomCheck(Func<T, ValidationResult> customCheckFunc)
         {
             AddValidator(new CustomValidator<T>(customCheckFunc));

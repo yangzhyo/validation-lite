@@ -161,25 +161,6 @@ namespace Validation.Lite.Test
             Assert.AreEqual(r.ErrorMessages[1], "Person.Height should be greater than 0.");
         }
 
-        /*
-        [TestMethod]
-        public void Validate_Greater_Than_Or_Equal_To_Wrong_Type()
-        {
-            try
-            {
-                Person john = new Person();
-                var v = new ValidateFor<Person>()
-                    .Field(p => p.Company).ShouldGreaterThanOrEqualTo(0);
-            }
-            catch (Exception ex)
-            {
-                Assert.AreEqual(ex.Message, "ShouldGreaterThanOrEqualTo method only support IComparable type.");
-                return;
-            }
-
-            Assert.Fail("Should throw exception: ShouldGreaterThanOrEqualTo method only support IComparable type.");
-        }
-
         [TestMethod]
         public void Validate_Greater_Than_Or_Equal_To_Success()
         {
@@ -206,25 +187,6 @@ namespace Validation.Lite.Test
             Assert.IsTrue(r.ErrorMessages.Count == 2);
             Assert.AreEqual(r.ErrorMessages[0], "Person.Age should be greater than or equal to 1.");
             Assert.AreEqual(r.ErrorMessages[1], "Person.Height should be greater than or equal to 0.");
-        }
-
-        [TestMethod]
-        public void Validate_Less_Than_Wrong_Type()
-        {
-            try
-            {
-                Person john = new Person();
-                var v = new ValidateFor<Person>()
-                    .Field(p => p.Company).ShouldLessThan(0);
-                var r = v.Validate(john);
-            }
-            catch (Exception ex)
-            {
-                Assert.AreEqual(ex.Message, "ShouldLessThan method only support IComparable type.");
-                return;
-            }
-
-            Assert.Fail("Should throw exception: ShouldLessThan method only support IComparable type.");
         }
 
         [TestMethod]
@@ -256,24 +218,6 @@ namespace Validation.Lite.Test
         }
 
         [TestMethod]
-        public void Validate_Less_Than_Or_Equal_To_Wrong_Type()
-        {
-            try
-            {
-                Person john = new Person();
-                var v = new ValidateFor<Person>()
-                    .Field(p => p.Company).ShouldLessThanOrEqualTo(0);
-            }
-            catch (Exception ex)
-            {
-                Assert.AreEqual(ex.Message, "ShouldLessThanOrEqualTo method only support IComparable type.");
-                return;
-            }
-
-            Assert.Fail("Should throw exception: ShouldLessThanOrEqualTo method only support IComparable type.");
-        }
-
-        [TestMethod]
         public void Validate_Less_Than_Or_Equal_To_Success()
         {
             Person john = new Person() { Age = 30, Height = 1.8m };
@@ -299,25 +243,6 @@ namespace Validation.Lite.Test
             Assert.IsTrue(r.ErrorMessages.Count == 2);
             Assert.AreEqual(r.ErrorMessages[0], "Person.Age should be less than or equal to 1.");
             Assert.AreEqual(r.ErrorMessages[1], "Person.Height should be less than or equal to 0.");
-        }
-
-        [TestMethod]
-        public void Validate_Equal_To_Wrong_Type()
-        {
-            try
-            {
-                Person john = new Person();
-                var v = new ValidateFor<Person>()
-                    .Field(p => p.Company).ShouldEqualTo(0);
-                var r = v.Validate(john);
-            }
-            catch (Exception ex)
-            {
-                Assert.AreEqual(ex.Message, "ShouldEqualTo method only support IComparable type.");
-                return;
-            }
-
-            Assert.Fail("Should throw exception: ShouldEqualTo method only support IComparable type.");
         }
 
         [TestMethod]
@@ -411,6 +336,7 @@ namespace Validation.Lite.Test
                     new ValidateFor<Company>()
                     .Field(c => c.Address).ShouldNotEmpty()
                     .Field(c => c.EmployeeCount).ShouldGreaterThan(0)
+                    .Build()
                 );
             var r = v.Validate(john);
 
@@ -427,6 +353,7 @@ namespace Validation.Lite.Test
                     new ValidateFor<Company>()
                     .Field(c => c.Address).ShouldNotEmpty()
                     .Field(c => c.EmployeeCount).ShouldGreaterThan(0)
+                    .Build()
                 );
             var r = v.Validate(john);
 
@@ -517,24 +444,6 @@ namespace Validation.Lite.Test
             Assert.AreEqual(r.ErrorMessages[0], "Custom Check Failed.");
         }
 
-        [TestMethod]
-        public void Validate_Custom_Check_Wrong_Type()
-        {
-            try
-            {
-                Person john = new Person();
-                var v = new ValidateFor<Person>()
-                    .Field(p => p.Age).ShouldPassCustomCheck(CustomCheckFail);
-            }
-            catch (Exception ex)
-            {
-                Assert.AreEqual(ex.Message, "ShouldPassCustomCheck method only support entity validation rule.");
-                return;
-            }
-            
-            Assert.Fail("Should throw exception: ShouldPassCustomCheck method only support entity validation rule.");
-        }
-
         ValidationResult CustomCheckOk(Person p)
         {
             return new ValidationResult { IsValid = true };
@@ -586,6 +495,6 @@ namespace Validation.Lite.Test
             Assert.IsFalse(r.IsValid);
             Assert.AreEqual(r.ErrorMessages.Count, 1);
             Assert.AreEqual(r.ErrorMessages[0], "Collection@1:Person.Name should not be empty.");
-        }*/
+        }
     }
 }

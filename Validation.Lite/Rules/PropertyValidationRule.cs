@@ -7,6 +7,7 @@ namespace Validation.Lite
     {
         private Func<T, TProperty> _getValueFunc = null;
         private ICollection<IValidator<TProperty>> _validators = null;
+        private ICollection<IValidator<object>> _weakValidators = null;
 
         public PropertyValidationRule(ValidateFor<T> validateFor, Func<T, TProperty> getValueFunc)
             : base(validateFor)
@@ -97,6 +98,18 @@ namespace Validation.Lite
         {
             AddValidator(new NestedValidator<TProperty>(validateFor));
             return this;
+        }
+
+        public PropertyValidationRule<T, TProperty> ValidateWith<TEntity>(ValidateFor<object> validateFor)
+        {
+            IValidator<ValidationResult> validator = new NestedValidator<object>(validateFor);
+            AddValidator(validator);
+            _weakValidators.Add(validator);
+            return this;
+            IEnumerable<object> a = null;
+            IEnumerable<ValidationResult> b = null;
+            a = b;
+            ICollection<>
         }
 
         public PropertyValidationRule<T, TProperty> ShouldPassCustomCheck(Func<TProperty, ValidationResult> customCheckFunc)
