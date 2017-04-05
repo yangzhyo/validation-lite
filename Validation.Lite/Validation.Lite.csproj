@@ -51,10 +51,10 @@
     <Compile Include="Validators\CustomValidator.cs" />
     <Compile Include="Validators\GreaterThanValidator.cs" />
     <Compile Include="Validators\LengthValidator.cs" />
+    <Compile Include="Validators\NestedListValidator.cs" />
     <Compile Include="Validators\NotEmptyValidator.cs" />
     <Compile Include="Validators\NotNullValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ValidationContext.cs" />
     <Compile Include="ValidationResult.cs" />
     <Compile Include="ValidateFor.cs" />
     <Compile Include="Rules\PropertyValidationRule.cs" />

@@ -5,6 +5,8 @@
         private int _minLength;
         private int _maxLength;
 
+        public string ValidationName { get; set; }
+
         public LengthValidator(int minLength, int maxLength)
         {
             _minLength = minLength;
@@ -28,11 +30,11 @@
                 result.IsValid = false;
                 if (_minLength == _maxLength)
                 {
-                    result.ErrorMessages.Add($"Length of {typeof(T)} should be {_maxLength}.");
+                    result.ErrorMessages.Add($"Length of {ValidationName} should be {_maxLength}.");
                 }
                 else
                 {
-                    result.ErrorMessages.Add($"Length of {typeof(T)} should between {_minLength} and {_maxLength}.");
+                    result.ErrorMessages.Add($"Length of {ValidationName} should between {_minLength} and {_maxLength}.");
                 }
             }
 

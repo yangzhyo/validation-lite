@@ -6,13 +6,15 @@ namespace Validation.Lite
     public abstract class ValidationRule<T>
     {
         private ValidateFor<T> _validateFor = null;
+        protected string _ruleName = null;
 
-        protected ValidationRule(ValidateFor<T> validationFor)
+        protected ValidationRule(string ruleName, ValidateFor<T> validationFor)
         {
+            _ruleName = ruleName;
             _validateFor = validationFor;
         }
 
-        public abstract ValidationResult Validate(T entiy);
+        public abstract ValidationResult Validate1(T entiy);
 
         public ValidateFor<T> Build()
         {

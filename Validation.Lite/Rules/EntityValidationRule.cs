@@ -7,18 +7,19 @@ namespace Validation.Lite
     {
         private ICollection<IValidator<T>> Validators { get; }
 
-        public EntityValidationRule(ValidateFor<T> validationFor)
-            : base(validationFor)
+        public EntityValidationRule(string ruleName, ValidateFor<T> validationFor)
+            : base(ruleName, validationFor)
         {
             Validators = new List<IValidator<T>>();
         }
 
         private void AddValidator(IValidator<T> validator)
         {
+            validator.ValidationName = _ruleName;
             Validators.Add(validator);
         }
 
-        public override ValidationResult Validate(T entiy)
+        public override ValidationResult Validate1(T entiy)
         {
             ValidationResult finalResult = new ValidationResult();
             foreach (IValidator<T> validator in Validators)
@@ -36,11 +37,17 @@ namespace Validation.Lite
             return this;
         }
 
-        //public EntityValidationRule<T> ValidateWith<TEntity>(ValidateFor<TEntity> validateFor)
-        //{
-        //    AddValidator(new NestedValidator<TEntity>(validateFor));
-        //    return this;
-        //}
+        public EntityValidationRule<T> ValidateWith(ValidateFor<T> validateFor)
+        {
+            AddValidator(new NestedValidator<T>(validateFor));
+            return this;
+        }
+
+        public EntityValidationRule<T> ValidateWith<TEntity>(ValidateFor<TEntity> validateFor)
+        {
+            AddValidator(new NestedListValidator<T, TEntity>(validateFor));
+            return this;
+        }
 
         public EntityValidationRule<T> ShouldPassCustomCheck(Func<T, ValidationResult> customCheckFunc)
         {

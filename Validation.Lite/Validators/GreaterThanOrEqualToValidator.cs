@@ -22,6 +22,8 @@ namespace Validation.Lite
             }
         }
 
+        public string ValidationName { get; set; }
+
         public GreaterThanOrEqualToValidator(T factor)
         {
             _factor = factor;
@@ -34,7 +36,7 @@ namespace Validation.Lite
             if (!CompareFunc(value, _factor))
             {
                 result.IsValid = false;
-                result.ErrorMessages.Add($"{typeof(T)} should be greater than or equal to {_factor}.");
+                result.ErrorMessages.Add($"{ValidationName} should be greater than or equal to {_factor}.");
             }
             
             return result;

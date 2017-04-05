@@ -22,6 +22,8 @@ namespace Validation.Lite
             }
         }
 
+        public string ValidationName { get; set; }
+
         public LessThanValidator(T factor)
         {
             _factor = factor;
@@ -34,7 +36,7 @@ namespace Validation.Lite
             if (!CompareFunc(value, _factor))
             {
                 result.IsValid = false;
-                result.ErrorMessages.Add($"{typeof(T)} should be less than {_factor}.");
+                result.ErrorMessages.Add($"{ValidationName} should be less than {_factor}.");
             }
 
             return result;

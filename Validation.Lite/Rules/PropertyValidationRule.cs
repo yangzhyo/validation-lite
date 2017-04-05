@@ -7,10 +7,9 @@ namespace Validation.Lite
     {
         private Func<T, TProperty> _getValueFunc = null;
         private ICollection<IValidator<TProperty>> _validators = null;
-        private ICollection<IValidator<object>> _weakValidators = null;
 
-        public PropertyValidationRule(ValidateFor<T> validateFor, Func<T, TProperty> getValueFunc)
-            : base(validateFor)
+        public PropertyValidationRule(string ruleName, ValidateFor<T> validateFor, Func<T, TProperty> getValueFunc)
+            : base(ruleName, validateFor)
         {
             _getValueFunc = getValueFunc;
             _validators = new List<IValidator<TProperty>>();
@@ -18,11 +17,17 @@ namespace Validation.Lite
 
         private void AddValidator(IValidator<TProperty> validator)
         {
+            validator.ValidationName = _ruleName;
             _validators.Add(validator);
         }
 
-        public override ValidationResult Validate(T entiy)
+        public override ValidationResult Validate1(T entiy)
         {
+            if(entiy == null)
+            {
+                return new ValidationResult(false, $"{_ruleName} should not be null.");
+            }
+
             TProperty property = _getValueFunc.Invoke(entiy);
 
             ValidationResult finalResult = new ValidationResult();
@@ -100,16 +105,10 @@ namespace Validation.Lite
             return this;
         }
 
-        public PropertyValidationRule<T, TProperty> ValidateWith<TEntity>(ValidateFor<object> validateFor)
+        public PropertyValidationRule<T, TProperty> ValidateWith<TEntity>(ValidateFor<TEntity> validateFor)
         {
-            IValidator<ValidationResult> validator = new NestedValidator<object>(validateFor);
-            AddValidator(validator);
-            _weakValidators.Add(validator);
+            AddValidator(new NestedListValidator<TProperty, TEntity>(validateFor));
             return this;
-            IEnumerable<object> a = null;
-            IEnumerable<ValidationResult> b = null;
-            a = b;
-            ICollection<>
         }
 
         public PropertyValidationRule<T, TProperty> ShouldPassCustomCheck(Func<TProperty, ValidationResult> customCheckFunc)

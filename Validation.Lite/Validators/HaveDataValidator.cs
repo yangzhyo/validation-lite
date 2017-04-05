@@ -3,8 +3,9 @@
 namespace Validation.Lite
 {
     public class HaveDataValidator<T> : IValidator<T>
-        //where T : ICollection
     {
+        public string ValidationName { get; set; }
+
         public ValidationResult Validate(T value)
         {
             ValidationResult result = new ValidationResult();
@@ -13,7 +14,7 @@ namespace Validation.Lite
             if (collection == null || collection.Count == 0)
             {
                 result.IsValid = false;
-                result.ErrorMessages.Add($"{typeof(T)} should have data.");
+                result.ErrorMessages.Add($"{ValidationName} should have data.");
             }
 
             return result;

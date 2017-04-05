@@ -13,7 +13,6 @@ namespace Validation.Lite.Test
             Person john = new Person() { Name = "John" };
             var v = new ValidateFor<Person>()
                 .Field(p => p.Name).ShouldNotNull()
-                .Field(p => p.Age).ShouldGreaterThan(1)
                 .Build();
             var r = v.Validate(john);
 
@@ -26,7 +25,8 @@ namespace Validation.Lite.Test
         {
             Person john = new Person();
             var v = new ValidateFor<Person>()
-                .Field(p => p.Name).ShouldNotNull();
+                .Field(p => p.Name).ShouldNotNull()
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsFalse(r.IsValid);
@@ -41,7 +41,8 @@ namespace Validation.Lite.Test
             {
                 Person john = new Person();
                 var v = new ValidateFor<Person>()
-                    .Field(p => p.Age).ShouldNotEmpty();
+                    .Field(p => p.Age).ShouldNotEmpty()
+                    .Build();
                 var r = v.Validate(john);
             }
             catch (Exception ex)
@@ -58,7 +59,8 @@ namespace Validation.Lite.Test
         {
             Person john = new Person() { Name = "John" };
             var v = new ValidateFor<Person>()
-                .Field(p => p.Name).ShouldNotEmpty();
+                .Field(p => p.Name).ShouldNotEmpty()
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsTrue(r.IsValid);
@@ -71,7 +73,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Name = "   " };
             Person bob = new Person();
             var v = new ValidateFor<Person>()
-                .Field(p => p.Name).ShouldNotEmpty();
+                .Field(p => p.Name).ShouldNotEmpty()
+                .Build();
             var r = v.Validate(john);
             
             Assert.IsFalse(r.IsValid);
@@ -92,7 +95,8 @@ namespace Validation.Lite.Test
             {
                 Person john = new Person();
                 var v = new ValidateFor<Person>()
-                    .Field(p => p.Age).Length(5);
+                    .Field(p => p.Age).Length(5)
+                    .Build();
                 var r = v.Validate(john);
             }
             catch (Exception ex)
@@ -109,7 +113,8 @@ namespace Validation.Lite.Test
         {
             Person john = new Person() { Name = "John" };
             var v = new ValidateFor<Person>()
-                .Field(p => p.Name).Length(4).Length(0, 5);
+                .Field(p => p.Name).Length(4).Length(0, 5)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsTrue(r.IsValid);
@@ -122,7 +127,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Name = "John" };
             Person bob = new Person();
             var v = new ValidateFor<Person>()
-                .Field(p => p.Name).Length(5).Length(3).Length(0, 3).Length(5, 6);
+                .Field(p => p.Name).Length(5).Length(3).Length(0, 3).Length(5, 6)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsFalse(r.IsValid);
@@ -139,7 +145,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Age = 30, Height = 1.8m };
             var v = new ValidateFor<Person>()
                 .Field(p => p.Age).ShouldGreaterThan(0)
-                .Field(p => p.Height).ShouldGreaterThan(0);
+                .Field(p => p.Height).ShouldGreaterThan(0)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsTrue(r.IsValid);
@@ -152,7 +159,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Age = 0, Height = -1m };
             var v = new ValidateFor<Person>()
                 .Field(p => p.Age).ShouldGreaterThan(0)
-                .Field(p => p.Height).ShouldGreaterThan(0m);
+                .Field(p => p.Height).ShouldGreaterThan(0m)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsFalse(r.IsValid);
@@ -167,7 +175,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Age = 30, Height = 1.8m };
             var v = new ValidateFor<Person>()
                 .Field(p => p.Age).ShouldGreaterThanOrEqualTo(29)
-                .Field(p => p.Height).ShouldGreaterThanOrEqualTo(1.8m);
+                .Field(p => p.Height).ShouldGreaterThanOrEqualTo(1.8m)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsTrue(r.IsValid);
@@ -180,7 +189,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Age = 0, Height = -1m };
             var v = new ValidateFor<Person>()
                 .Field(p => p.Age).ShouldGreaterThanOrEqualTo(1)
-                .Field(p => p.Height).ShouldGreaterThanOrEqualTo(0m);
+                .Field(p => p.Height).ShouldGreaterThanOrEqualTo(0m)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsFalse(r.IsValid);
@@ -195,7 +205,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Age = 30, Height = 1.8m };
             var v = new ValidateFor<Person>()
                 .Field(p => p.Age).ShouldLessThan(31)
-                .Field(p => p.Height).ShouldLessThan(2m);
+                .Field(p => p.Height).ShouldLessThan(2m)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsTrue(r.IsValid);
@@ -208,7 +219,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Age = 0, Height = 1m };
             var v = new ValidateFor<Person>()
                 .Field(p => p.Age).ShouldLessThan(0)
-                .Field(p => p.Height).ShouldLessThan(0m);
+                .Field(p => p.Height).ShouldLessThan(0m)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsFalse(r.IsValid);
@@ -223,7 +235,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Age = 30, Height = 1.8m };
             var v = new ValidateFor<Person>()
                 .Field(p => p.Age).ShouldLessThanOrEqualTo(31)
-                .Field(p => p.Height).ShouldLessThanOrEqualTo(1.8m);
+                .Field(p => p.Height).ShouldLessThanOrEqualTo(1.8m)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsTrue(r.IsValid);
@@ -236,7 +249,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Age = 2, Height = 1m };
             var v = new ValidateFor<Person>()
                 .Field(p => p.Age).ShouldLessThanOrEqualTo(1)
-                .Field(p => p.Height).ShouldLessThanOrEqualTo(0m);
+                .Field(p => p.Height).ShouldLessThanOrEqualTo(0m)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsFalse(r.IsValid);
@@ -251,7 +265,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Age = 30, Height = 1.8m };
             var v = new ValidateFor<Person>()
                 .Field(p => p.Age).ShouldEqualTo(30)
-                .Field(p => p.Height).ShouldEqualTo(1.8m);
+                .Field(p => p.Height).ShouldEqualTo(1.8m)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsTrue(r.IsValid);
@@ -264,7 +279,8 @@ namespace Validation.Lite.Test
             Person john = new Person() { Age = 1, Height = 1m };
             var v = new ValidateFor<Person>()
                 .Field(p => p.Age).ShouldEqualTo(0)
-                .Field(p => p.Height).ShouldEqualTo(0m);
+                .Field(p => p.Height).ShouldEqualTo(0m)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsFalse(r.IsValid);
@@ -280,7 +296,8 @@ namespace Validation.Lite.Test
             {
                 Person john = new Person();
                 var v = new ValidateFor<Person>()
-                    .Field(p => p.Company).ShouldHaveData();
+                    .Field(p => p.Company).ShouldHaveData()
+                    .Build();
                 var r = v.Validate(john);
             }
             catch (Exception ex)
@@ -300,7 +317,8 @@ namespace Validation.Lite.Test
                 FavoriteBooks = new List<Book>() { new Book() }
             };
             var v = new ValidateFor<Person>()
-                .Field(p => p.FavoriteBooks).ShouldHaveData();
+                .Field(p => p.FavoriteBooks).ShouldHaveData()
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsTrue(r.IsValid);
@@ -312,7 +330,8 @@ namespace Validation.Lite.Test
         {
             Person john = new Person();
             var v = new ValidateFor<Person>()
-                .Field(p => p.FavoriteBooks).ShouldHaveData();
+                .Field(p => p.FavoriteBooks).ShouldHaveData()
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsFalse(r.IsValid);
@@ -337,7 +356,8 @@ namespace Validation.Lite.Test
                     .Field(c => c.Address).ShouldNotEmpty()
                     .Field(c => c.EmployeeCount).ShouldGreaterThan(0)
                     .Build()
-                );
+                )
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsTrue(r.IsValid);
@@ -354,7 +374,7 @@ namespace Validation.Lite.Test
                     .Field(c => c.Address).ShouldNotEmpty()
                     .Field(c => c.EmployeeCount).ShouldGreaterThan(0)
                     .Build()
-                );
+                ).Build();
             var r = v.Validate(john);
 
             Assert.IsFalse(r.IsValid);
@@ -387,7 +407,8 @@ namespace Validation.Lite.Test
                     new ValidateFor<Book>()
                     .Field(b => b.Name).ShouldNotEmpty()
                     .Field(b => b.PageCount).ShouldGreaterThan(0)
-                );
+                    .Build()
+                ).Build();
             var r = v.Validate(john);
 
             Assert.IsTrue(r.IsValid);
@@ -410,13 +431,14 @@ namespace Validation.Lite.Test
                     new ValidateFor<Book>()
                     .Field(b => b.Name).ShouldNotEmpty()
                     .Field(b => b.PageCount).ShouldGreaterThan(0)
-                );
+                    .Build()
+                ).Build();
             var r = v.Validate(john);
             
             Assert.IsFalse(r.IsValid);
             Assert.IsTrue(r.ErrorMessages.Count == 2);
-            Assert.AreEqual(r.ErrorMessages[0], "Collection@1:Book.Name should not be empty.");
-            Assert.AreEqual(r.ErrorMessages[1], "Collection@1:Book.PageCount should be greater than 0.");
+            Assert.AreEqual(r.ErrorMessages[0], "Person.FavoriteBooks Collection@1:Book.Name should not be empty.");
+            Assert.AreEqual(r.ErrorMessages[1], "Person.FavoriteBooks Collection@1:Book.PageCount should be greater than 0.");
         }
 
         [TestMethod]
@@ -424,7 +446,8 @@ namespace Validation.Lite.Test
         {
             Person john = new Person();
             var v = new ValidateFor<Person>()
-                .Entity().ShouldPassCustomCheck(CustomCheckOk);
+                .Entity().ShouldPassCustomCheck(CustomCheckOk)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsTrue(r.IsValid);
@@ -436,7 +459,8 @@ namespace Validation.Lite.Test
         {
             Person john = new Person();
             var v = new ValidateFor<Person>()
-                .Entity().ShouldPassCustomCheck(CustomCheckFail);
+                .Entity().ShouldPassCustomCheck(CustomCheckFail)
+                .Build();
             var r = v.Validate(john);
 
             Assert.IsFalse(r.IsValid);
@@ -469,7 +493,9 @@ namespace Validation.Lite.Test
                 .Field(s => s.Count).ShouldEqualTo(1)
                 .Entity().ShouldHaveData().ValidateWith(
                     new ValidateFor<Person>()
-                        .Field(p => p.Name).ShouldNotEmpty());
+                        .Field(p => p.Name).ShouldNotEmpty()
+                        .Build())
+                        .Build();
             var r = v.Validate(persons);
             Assert.IsTrue(r.IsValid);
         }
@@ -482,7 +508,8 @@ namespace Validation.Lite.Test
                 .Field(s => s.Count).ShouldEqualTo(1)
                 .Entity().ShouldHaveData().ValidateWith(
                     new ValidateFor<Person>()
-                        .Field(p => p.Name).ShouldNotEmpty());
+                        .Field(p => p.Name).ShouldNotEmpty()
+                        .Build()).Build();
 
             var r = v.Validate(persons);
             Assert.IsFalse(r.IsValid);
@@ -494,7 +521,7 @@ namespace Validation.Lite.Test
             r = v.Validate(persons);
             Assert.IsFalse(r.IsValid);
             Assert.AreEqual(r.ErrorMessages.Count, 1);
-            Assert.AreEqual(r.ErrorMessages[0], "Collection@1:Person.Name should not be empty.");
+            Assert.AreEqual(r.ErrorMessages[0], "List`1 Collection@1:Person.Name should not be empty.");
         }
     }
 }
