@@ -1,23 +1,29 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 
 namespace Validation.Lite
 {
-    public class HaveDataValidator<T> : IValidator<T>
+    public class HaveDataValidator<T, TElement> : IValidator<T>
+        where T : IEnumerable<TElement>
     {
         public string ValidationName { get; set; }
 
         public ValidationResult Validate(T value)
         {
-            ValidationResult result = new ValidationResult();
-
-            var collection = value as ICollection;
-            if (collection == null || collection.Count == 0)
+            if (value == null)
             {
-                result.IsValid = false;
-                result.ErrorMessages.Add($"{ValidationName} should have data.");
+                return new ValidationResult(false, $"{ValidationName} should have data.");
             }
 
-            return result;
+            var enumerable = (IEnumerable<TElement>)value;
+            using (var enumerator = enumerable.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    return new ValidationResult();
+                }
+            }
+
+            return new ValidationResult(false, $"{ValidationName} should have data.");
         }
     }
 }

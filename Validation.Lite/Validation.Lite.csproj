@@ -41,6 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Rules\EntityValidationRule.cs" />
+    <Compile Include="Rules\EnumerableEntityValidationRule.cs" />
+    <Compile Include="Rules\EnumerablePropertyValidationRule.cs" />
     <Compile Include="Validators\LessThanOrEqualToValidator.cs" />
     <Compile Include="Validators\GreaterThanOrEqualToValidator.cs" />
     <Compile Include="Validators\EqualToValidator.cs" />
@@ -51,7 +53,7 @@
     <Compile Include="Validators\CustomValidator.cs" />
     <Compile Include="Validators\GreaterThanValidator.cs" />
     <Compile Include="Validators\LengthValidator.cs" />
-    <Compile Include="Validators\NestedListValidator.cs" />
+    <Compile Include="Validators\NestedEnumerableValidator.cs" />
     <Compile Include="Validators\NotEmptyValidator.cs" />
     <Compile Include="Validators\NotNullValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

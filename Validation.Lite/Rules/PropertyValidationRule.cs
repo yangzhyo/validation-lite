@@ -5,30 +5,32 @@ namespace Validation.Lite
 {
     public class PropertyValidationRule<T, TProperty> : ValidationRule<T>
     {
-        private Func<T, TProperty> _getValueFunc = null;
-        private ICollection<IValidator<TProperty>> _validators = null;
+        private Func<T, TProperty> _getPropertyValueFunc;
+        private ICollection<IValidator<TProperty>> _validators;
+        private string _propertyName;
 
-        public PropertyValidationRule(string ruleName, ValidateFor<T> validateFor, Func<T, TProperty> getValueFunc)
-            : base(ruleName, validateFor)
+        public PropertyValidationRule(string entityName, ValidateFor<T> validateFor, string propertyName, Func<T, TProperty> getPropertyValueFunc)
+            : base(entityName, validateFor)
         {
-            _getValueFunc = getValueFunc;
+            _propertyName = propertyName;
+            _getPropertyValueFunc = getPropertyValueFunc;
             _validators = new List<IValidator<TProperty>>();
         }
 
         private void AddValidator(IValidator<TProperty> validator)
         {
-            validator.ValidationName = _ruleName;
+            validator.ValidationName = $"{EntityName}.{_propertyName}";
             _validators.Add(validator);
         }
 
-        public override ValidationResult Validate1(T entiy)
+        internal override ValidationResult Validate(T entiy)
         {
             if(entiy == null)
             {
-                return new ValidationResult(false, $"{_ruleName} should not be null.");
+                return new ValidationResult(false, $"{EntityName} should not be null.");
             }
 
-            TProperty property = _getValueFunc.Invoke(entiy);
+            TProperty property = _getPropertyValueFunc.Invoke(entiy);
 
             ValidationResult finalResult = new ValidationResult();
             foreach (IValidator<TProperty> validator in _validators)
@@ -93,21 +95,9 @@ namespace Validation.Lite
             return this;
         }
 
-        public PropertyValidationRule<T, TProperty> ShouldHaveData()
-        {
-            AddValidator(new HaveDataValidator<TProperty>());
-            return this;
-        }
-
         public PropertyValidationRule<T, TProperty> ValidateWith(ValidateFor<TProperty> validateFor)
         {
             AddValidator(new NestedValidator<TProperty>(validateFor));
-            return this;
-        }
-
-        public PropertyValidationRule<T, TProperty> ValidateWith<TEntity>(ValidateFor<TEntity> validateFor)
-        {
-            AddValidator(new NestedListValidator<TProperty, TEntity>(validateFor));
             return this;
         }
 

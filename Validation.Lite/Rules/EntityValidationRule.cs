@@ -7,19 +7,19 @@ namespace Validation.Lite
     {
         private ICollection<IValidator<T>> Validators { get; }
 
-        public EntityValidationRule(string ruleName, ValidateFor<T> validationFor)
-            : base(ruleName, validationFor)
+        public EntityValidationRule(string entityName, ValidateFor<T> validationFor)
+            : base(entityName, validationFor)
         {
             Validators = new List<IValidator<T>>();
         }
 
         private void AddValidator(IValidator<T> validator)
         {
-            validator.ValidationName = _ruleName;
+            validator.ValidationName = EntityName;
             Validators.Add(validator);
         }
 
-        public override ValidationResult Validate1(T entiy)
+        internal override ValidationResult Validate(T entiy)
         {
             ValidationResult finalResult = new ValidationResult();
             foreach (IValidator<T> validator in Validators)
@@ -31,21 +31,9 @@ namespace Validation.Lite
             return finalResult;
         }
 
-        public EntityValidationRule<T> ShouldHaveData()
-        {
-            AddValidator(new HaveDataValidator<T>());
-            return this;
-        }
-
         public EntityValidationRule<T> ValidateWith(ValidateFor<T> validateFor)
         {
             AddValidator(new NestedValidator<T>(validateFor));
-            return this;
-        }
-
-        public EntityValidationRule<T> ValidateWith<TEntity>(ValidateFor<TEntity> validateFor)
-        {
-            AddValidator(new NestedListValidator<T, TEntity>(validateFor));
             return this;
         }
 

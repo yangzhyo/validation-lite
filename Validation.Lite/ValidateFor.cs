@@ -15,16 +15,46 @@ namespace Validation.Lite
             return rule;
         }
 
+        //public EntityValidationRule<T> EnumerableEntity<TEntity, TElement>()
+        //    where TEntity : IEnumerable<TElement>
+        //{
+        //    var rule = new EnumerableEntityValidationRule<T>(typeof(T).Name, this);
+        //    _validationRules.Add(rule);
+        //    return rule;
+        //}
+
         public PropertyValidationRule<T, TProperty> Field<TProperty>(Expression<Func<T, TProperty>> fieldExpression)
         {
             if (fieldExpression.Body.NodeType == ExpressionType.MemberAccess)
             {
                 MemberExpression memberExpression = (MemberExpression)fieldExpression.Body;
-                string ruleName = $"{typeof(T).Name}.{memberExpression.Member.Name}";
+                string entityName = typeof(T).Name;
+                string propertyName = memberExpression.Member.Name;
 
                 Func<T, TProperty> getFieldFunc = fieldExpression.Compile();
 
-                var rule = new PropertyValidationRule<T, TProperty>(ruleName, this, getFieldFunc);
+                var rule = new PropertyValidationRule<T, TProperty>(entityName, this, propertyName, getFieldFunc);
+                _validationRules.Add(rule);
+                return rule;
+            }
+            else
+            {
+                throw new Exception("Field<TProperty> method only support member access.");
+            }
+        }
+
+        public EnumerablePropertyValidationRule<T, TEnumerableProperty, TElement> EnumerableField<TEnumerableProperty, TElement>(Expression<Func<T, TEnumerableProperty>> fieldExpression)
+            where TEnumerableProperty : IEnumerable<TElement>
+        {
+            if (fieldExpression.Body.NodeType == ExpressionType.MemberAccess)
+            {
+                MemberExpression memberExpression = (MemberExpression)fieldExpression.Body;
+                string entityName = typeof(T).Name;
+                string propertyName = memberExpression.Member.Name;
+
+                Func<T, TEnumerableProperty> getFieldFunc = fieldExpression.Compile();
+
+                var rule = new EnumerablePropertyValidationRule<T, TEnumerableProperty, TElement>(entityName, this, propertyName, getFieldFunc);
                 _validationRules.Add(rule);
                 return rule;
             }
@@ -42,7 +72,7 @@ namespace Validation.Lite
             {
                 foreach(var rule in _validationRules)
                 {
-                    ValidationResult result = rule.Validate1(target);
+                    ValidationResult result = rule.Validate(target);
                     finalResult.MergeValidationResult(result);
                 }
             }
