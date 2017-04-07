@@ -53,6 +53,7 @@
     <Compile Include="Book.cs" />
     <Compile Include="Company.cs" />
     <Compile Include="Person.cs" />
+    <Compile Include="PersonValidator.cs" />
     <Compile Include="ValidateForEnumerableTest.cs" />
     <Compile Include="ValidateForTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
