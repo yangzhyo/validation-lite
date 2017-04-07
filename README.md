@@ -44,8 +44,8 @@ List<Person> persons = new List<Person>()
 
 var v = new ValidateForEnumerable<List<Person>, Person>()
     .ShouldHaveData()
-	.ShouldPassCustomCheck(ps => ValidationResult.Valid);
-	.ValidateElementWith(
+    .ShouldPassCustomCheck(ps => ValidationResult.Valid);
+    .ValidateElementWith(
         new ValidateFor<Person>()
             .Field(p => p.Name).ShouldNotEmpty());
 
