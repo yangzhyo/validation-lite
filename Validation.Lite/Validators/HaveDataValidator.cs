@@ -19,7 +19,7 @@ namespace Validation.Lite
             {
                 while (enumerator.MoveNext())
                 {
-                    return new ValidationResult();
+                    return ValidationResult.Valid;
                 }
             }
 

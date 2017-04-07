@@ -4,7 +4,7 @@ namespace Validation.Lite
 {
     public class CustomValidator<T> : IValidator<T>
     {
-        private Func<T, ValidationResult> _customValidateFunc { get; }
+        private readonly Func<T, ValidationResult> _customValidateFunc;
         public string ValidationName { get; set; }
 
         public CustomValidator(Func<T, ValidationResult> customValidateFunc)
@@ -14,6 +14,11 @@ namespace Validation.Lite
 
         public ValidationResult Validate(T value)
         {
+            if (_customValidateFunc == null)
+            {
+                return ValidationResult.Valid;
+            }
+
             return _customValidateFunc(value);
         }
     }

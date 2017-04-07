@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace Validation.Lite
@@ -24,6 +25,12 @@ namespace Validation.Lite
         public PropertyValidationRule<T, TProperty> Field<TProperty>(Expression<Func<T, TProperty>> fieldExpression)
         {
             return _validateFor.Field(fieldExpression);
+        }
+
+        public EnumerablePropertyValidationRule<T, TEnumerableProperty, TElement> EnumerableField<TEnumerableProperty, TElement>(Expression<Func<T, TEnumerableProperty>> fieldExpression)
+            where TEnumerableProperty : IEnumerable<TElement>
+        {
+            return _validateFor.EnumerableField<TEnumerableProperty, TElement>(fieldExpression);
         }
 
         public EntityValidationRule<T> Entity()

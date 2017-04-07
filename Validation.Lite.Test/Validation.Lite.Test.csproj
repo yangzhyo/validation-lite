@@ -53,8 +53,10 @@
     <Compile Include="Book.cs" />
     <Compile Include="Company.cs" />
     <Compile Include="Person.cs" />
-    <Compile Include="ValidatorTest.cs" />
+    <Compile Include="ValidateForEnumerableTest.cs" />
+    <Compile Include="ValidateForTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ValidationResultTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Validation.Lite\Validation.Lite.csproj">

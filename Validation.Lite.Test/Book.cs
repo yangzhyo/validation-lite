@@ -10,5 +10,6 @@ namespace Validation.Lite.Test
     {
         public string Name { get; set; }
         public int PageCount { get; set; }
+        public List<Person> Authors { get; set; }
     }
 }

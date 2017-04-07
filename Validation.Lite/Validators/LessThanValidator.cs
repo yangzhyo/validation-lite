@@ -5,20 +5,22 @@ namespace Validation.Lite
 {
     public class LessThanValidator<T> : IValidator<T>
     {
-        private T _factor;
+        private readonly T _factor;
+        private static Func<T, T, bool> _compareFunc;
         private static Func<T, T, bool> CompareFunc
         {
             get
             {
-                ParameterExpression value = Expression.Parameter(typeof(T), "value");
-                ParameterExpression factor = Expression.Parameter(typeof(T), "factor");
-                BinaryExpression compare = Expression.LessThan(value, factor);
-                Expression<Func<T, T, bool>> lambda =
-                    Expression.Lambda<Func<T, T, bool>>(
-                        compare,
-                        new ParameterExpression[] { value, factor });
+                if (_compareFunc == null)
+                {
+                    ParameterExpression value = Expression.Parameter(typeof(T), "value");
+                    ParameterExpression factor = Expression.Parameter(typeof(T), "factor");
+                    BinaryExpression compare = Expression.LessThan(value, factor);
+                    Expression<Func<T, T, bool>> lambda = Expression.Lambda<Func<T, T, bool>>(compare, value, factor);
+                    _compareFunc = lambda.Compile();
+                }
 
-                return lambda.Compile();
+                return _compareFunc;
             }
         }
 
@@ -31,15 +33,12 @@ namespace Validation.Lite
 
         public ValidationResult Validate(T value)
         {
-            ValidationResult result = new ValidationResult();
-
             if (!CompareFunc(value, _factor))
             {
-                result.IsValid = false;
-                result.ErrorMessages.Add($"{ValidationName} should be less than {_factor}.");
+                return new ValidationResult(false, $"{ValidationName} should be less than {_factor}.");
             }
 
-            return result;
+            return ValidationResult.Valid;
         }
     }
 }

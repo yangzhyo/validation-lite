@@ -33,11 +33,11 @@ namespace Validation.Lite
 
             TEnumerableProperty property = _getPropertyValueFunc.Invoke(entiy);
 
-            ValidationResult finalResult = new ValidationResult();
+            ValidationResult finalResult = ValidationResult.Valid;
             foreach (IValidator<TEnumerableProperty> validator in _validators)
             {
                 ValidationResult result = validator.Validate(property);
-                finalResult.MergeValidationResult(result);
+                finalResult.MergeResult(result);
             }
 
             return finalResult;

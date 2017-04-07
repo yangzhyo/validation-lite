@@ -32,11 +32,11 @@ namespace Validation.Lite
 
             TProperty property = _getPropertyValueFunc.Invoke(entiy);
 
-            ValidationResult finalResult = new ValidationResult();
+            ValidationResult finalResult = ValidationResult.Valid;
             foreach (IValidator<TProperty> validator in _validators)
             {
                 ValidationResult result = validator.Validate(property);
-                finalResult.MergeValidationResult(result);
+                finalResult.MergeResult(result);
             }
 
             return finalResult;

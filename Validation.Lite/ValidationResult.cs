@@ -5,22 +5,24 @@ namespace Validation.Lite
 {
     public class ValidationResult
     {
-        public bool IsValid { get; set; }
-        public List<string> ErrorMessages { get; set; }
+        public static ValidationResult Valid => new ValidationResult(true);
 
-        public ValidationResult()
+        public bool IsValid { get; private set; }
+        public List<string> ErrorMessages { get; }
+
+        public ValidationResult(bool isValid)
         {
-            IsValid = true;
+            IsValid = isValid;
             ErrorMessages = new List<string>();
         }
 
         public ValidationResult(bool isValid, string message)
         {
             IsValid = isValid;
-            ErrorMessages = new List<string>() { message };
+            ErrorMessages = new List<string> { message };
         }
 
-        public void MergeValidationResult(ValidationResult result)
+        public void MergeResult(ValidationResult result)
         {
             if (!result.IsValid)
             {

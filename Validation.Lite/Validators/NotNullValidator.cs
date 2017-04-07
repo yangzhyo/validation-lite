@@ -6,15 +6,12 @@
 
         public ValidationResult Validate(T value)
         {
-            ValidationResult result = new ValidationResult();
-
             if (value == null)
             {
-                result.IsValid = false;
-                result.ErrorMessages.Add($"{ValidationName} should not be null.");
+                return new ValidationResult(false, $"{ValidationName} should not be null.");
             }
 
-            return result;
+            return ValidationResult.Valid;
         }
     }
 }

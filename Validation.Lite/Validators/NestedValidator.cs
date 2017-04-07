@@ -1,4 +1,6 @@
-﻿namespace Validation.Lite
+﻿using System;
+
+namespace Validation.Lite
 {
     public class NestedValidator<T> : IValidator<T>
     {
@@ -13,6 +15,11 @@
 
         public ValidationResult Validate(T value)
         {
+            if (_validateFor == null)
+            {
+                return ValidationResult.Valid;
+            }
+
             return _validateFor.Validate(value);
         }
     }

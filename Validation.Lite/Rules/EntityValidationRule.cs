@@ -21,20 +21,14 @@ namespace Validation.Lite
 
         internal override ValidationResult Validate(T entiy)
         {
-            ValidationResult finalResult = new ValidationResult();
+            ValidationResult finalResult = ValidationResult.Valid;
             foreach (IValidator<T> validator in Validators)
             {
                 ValidationResult result = validator.Validate(entiy);
-                finalResult.MergeValidationResult(result);
+                finalResult.MergeResult(result);
             }
 
             return finalResult;
-        }
-
-        public EntityValidationRule<T> ValidateWith(ValidateFor<T> validateFor)
-        {
-            AddValidator(new NestedValidator<T>(validateFor));
-            return this;
         }
 
         public EntityValidationRule<T> ShouldPassCustomCheck(Func<T, ValidationResult> customCheckFunc)

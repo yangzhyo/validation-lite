@@ -6,16 +6,13 @@
 
         public ValidationResult Validate(T value)
         {
-            ValidationResult result = new ValidationResult();
-
             string str = value?.ToString();
             if (string.IsNullOrWhiteSpace(str))
             {
-                result.IsValid = false;
-                result.ErrorMessages.Add($"{ValidationName} should not be empty.");
+                return new ValidationResult(false, $"{ValidationName} should not be empty.");
             }
 
-            return result;
+            return ValidationResult.Valid;
         }
     }
 }

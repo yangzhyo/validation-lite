@@ -2,8 +2,8 @@
 {
     public class LengthValidator<T> : IValidator<T>
     {
-        private int _minLength;
-        private int _maxLength;
+        private readonly int _minLength;
+        private readonly int _maxLength;
 
         public string ValidationName { get; set; }
 
@@ -15,8 +15,6 @@
 
         public ValidationResult Validate(T value)
         {
-            ValidationResult result = new ValidationResult();
-
             string str = value?.ToString();
             
             int length = 0;
@@ -25,20 +23,17 @@
                 length = str.Length;
             }
 
-            if (length < _minLength || length > _maxLength)
+            if (length >= _minLength && length <= _maxLength)
             {
-                result.IsValid = false;
-                if (_minLength == _maxLength)
-                {
-                    result.ErrorMessages.Add($"Length of {ValidationName} should be {_maxLength}.");
-                }
-                else
-                {
-                    result.ErrorMessages.Add($"Length of {ValidationName} should between {_minLength} and {_maxLength}.");
-                }
+                return ValidationResult.Valid;
             }
 
-            return result;
+            if (_minLength == _maxLength)
+            {
+                return new ValidationResult(false, $"Length of {ValidationName} should be {_maxLength}.");
+            }
+
+            return new ValidationResult(false, $"Length of {ValidationName} should between {_minLength} and {_maxLength}.");
         }
     }
 }
