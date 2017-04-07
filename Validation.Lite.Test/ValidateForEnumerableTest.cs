@@ -52,6 +52,28 @@ namespace Validation.Lite.Test
         }
 
         [TestMethod]
+        public void Validate_Enumerable_Entity_Custom_Check_Failed()
+        {
+            List<Person> persons = new List<Person>();
+            var v = new ValidateForEnumerable<List<Person>, Person>()
+                .ShouldPassCustomCheck(
+                    ps =>
+                    {
+                        if (ps == null || ps.Count == 0)
+                        {
+                            return new ValidationResult(false, "Person collection no data.");
+                        }
+                        return ValidationResult.Valid;
+                    }
+                );
+
+            var r = v.Validate(persons);
+            Assert.IsFalse(r.IsValid);
+            Assert.AreEqual(r.ErrorMessages.Count, 1);
+            Assert.AreEqual(r.ErrorMessages[0], "Person collection no data.");
+        }
+
+        [TestMethod]
         public void Validate_Enumerable_Entity_Should_Have_Data_Failed()
         {
             List<Person> persons = new List<Person>();
@@ -79,28 +101,6 @@ namespace Validation.Lite.Test
             Assert.IsFalse(r.IsValid);
             Assert.AreEqual(r.ErrorMessages.Count, 1);
             Assert.AreEqual(r.ErrorMessages[0], "List`1 Collection@1:Person.Name should not be empty.");
-        }
-
-        [TestMethod]
-        public void Validate_Enumerable_Entity_Custom_Check_Failed()
-        {
-            List<Person> persons = new List<Person>();
-            var v = new ValidateForEnumerable<List<Person>, Person>()
-                .ShouldPassCustomCheck(
-                    ps =>
-                    {
-                        if (ps == null || ps.Count == 0)
-                        {
-                            return new ValidationResult(false, "Person collection no data.");
-                        }
-                        return ValidationResult.Valid;
-                    }
-                );
-
-            var r = v.Validate(persons);
-            Assert.IsFalse(r.IsValid);
-            Assert.AreEqual(r.ErrorMessages.Count, 1);
-            Assert.AreEqual(r.ErrorMessages[0], "Person collection no data.");
         }
     }
 }

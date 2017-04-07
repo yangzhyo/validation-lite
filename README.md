@@ -1,9 +1,13 @@
 # validation-lite
-A lightweight entity validation framework
+- A lightweight and high performance entity validation framework.
+- Based on generic type and expression tree, it's very efficient.
+- Flexible and reusable.
 
 # How to use
+## For Single Object
 ```C#
 Person john = repo.GetPerson();
+
 var v = new ValidateFor<Person>()
     .Field(p => p.Name).ShouldNotEmpty().Length(1, 10)
     .Field(p => p.Age).ShouldGreaterThan(0)
@@ -16,12 +20,14 @@ var v = new ValidateFor<Person>()
         .Field(c => c.Address).ShouldNotEmpty()
         .Field(c => c.EmployeeCount).ShouldGreaterThan(0)
     )
-    .Field(p => p.FavoriteBooks).ShouldHaveData().ValidateWith(
+    .EnumerableField<List<Book>, Book>(p => p.FavoriteBooks).ShouldHaveData().ValidateWith(
         new ValidateFor<Book>()
         .Field(b => b.Name).ShouldNotEmpty()
         .Field(b => b.PageCount).ShouldGreaterThan(0)
     )
-    .Entity().ShouldPassCustomCheck(CustomCheck);
+    .Entity().ShouldPassCustomCheck(CustomCheck)
+	.Build();
+	
 var r = v.Validate(john);
 if (!r.IsValid)
 {
@@ -29,15 +35,48 @@ if (!r.IsValid)
 }
 ```
 
+## For Enumerable Object
 ```C#
 List<Person> persons = new List<Person>()
 {
     new Person() {Name = "John"}
 };
-var v = new ValidateFor<List<Person>>()
-    .Field(s => s.Count).ShouldEqualTo(1)
-    .Entity().ShouldHaveData().ValidateWith(
+
+var v = new ValidateForEnumerable<List<Person>, Person>()
+    .ShouldHaveData()
+	.ShouldPassCustomCheck(ps => ValidationResult.Valid);
+	.ValidateElementWith(
         new ValidateFor<Person>()
             .Field(p => p.Name).ShouldNotEmpty());
+
 var r = v.Validate(persons);
+```
+
+## Reusable Validator
+```C#
+public class PersonValidator : ValidateFor<Person>
+{
+    public PersonValidator()
+    {
+        this.Field(p => p.Age).ShouldGreaterThan(0)
+            .Field(p => p.Company).ShouldNotNull().ValidateWith(new CompanyValidator());
+    }
+}
+
+public class CompanyValidator : ValidateFor<Company>
+{
+    public CompanyValidator()
+    {
+        this.Field(c => c.Address).ShouldNotEmpty().ShouldPassCustomCheck(CheckAddress);
+    }
+
+    public ValidationResult CheckAddress(string address)
+    {
+        return ValidationResult.Valid;
+    }
+}
+
+Person john = new Person();
+PersonValidator validator = new PersonValidator();
+ValidationResult result = validator.Validate(john);
 ```
