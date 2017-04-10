@@ -26,7 +26,7 @@ var v = new ValidateFor<Person>()
         .Field(b => b.PageCount).ShouldGreaterThan(0)
     )
     .Entity().ShouldPassCustomCheck(CustomCheck)
-	.Build();
+    .Build();
 	
 var r = v.Validate(john);
 if (!r.IsValid)
